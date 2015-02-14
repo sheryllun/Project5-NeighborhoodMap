@@ -19,44 +19,45 @@ function initialize() {
   google.maps.event.addListener(marker, 'click', function() {
     infoWindow.open(map, marker);
   });
+
+  getGroupons();
+
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
 
-// function GrouponDeals(deal, address, city) {
-//   this.deal = deal;
-//   this.address = address;
-//   this.city = city;
-// }
+function getGroupons() {
+  var grouponUrl = "https://partner-api.groupon.com/deals.json?tsToken=afc14db65a41970c883ef994628f8dc96a743462&division_id=washington-dc&filters=category:food-and-drink&offset=0&limit=15";
 
-var grouponUrl = "https://partner-api.groupon.com/deals.json?tsToken=afc14db65a41970c883ef994628f8dc96a743462&division_id=washington-dc&filters=category:food-and-drink&offset=0&limit=15";
+  var grouponDeals = [];
 
-var grouponDeals = [];
-
-$.ajax({
-  url: grouponUrl,
-  dataType: 'jsonp',
-  success: function(data) {
-    for(var i = 0; i < 15; i++) {
-      var venueLocation = data.deals[i].options[0].redemptionLocations[0];
-        if (venueLocation === undefined) continue;
-      var venueName = data.deals[i].merchant.name;
-      var venueAddress = venueLocation.streetAddress1;
-      var venueCity = venueLocation.city;
-      grouponDeals.push({dealName: venueName, dealAddress: venueAddress, dealCity: venueCity, geolocation: 0});
-    }
-    var geoUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=" + grouponDeals[0].dealAddress + ",+" + grouponDeals[0].dealCity + "&key=AIzaSyCVzYqt4JIDK3C_xMQcNssaEKeDUxf45aA";
-    console.log(geoUrl);
-    $.ajax({
-      url: geoUrl,
-      dataType: 'json',
-      success: function(data) {
-        console.log(data);
+  $.ajax({
+    url: grouponUrl,
+    dataType: 'jsonp',
+    success: function(data) {
+      for(var i = 0; i < 15; i++) {
+        var venueLocation = data.deals[i].options[0].redemptionLocations[0];
+          if (venueLocation === undefined) continue;
+        var venueName = data.deals[i].merchant.name;
+        var actualDeal = data.deals[i].announcementTitle;
+        var venueLat = venueLocation.lat;
+        var venueLon = venueLocation.lng;
+        grouponDeals.push({dealName: venueName, dealLat: venueLat, dealLon: venueLon, dealDeal: actualDeal});
       }
+  mapMarkers(grouponDeals);
+    }
+  });
+}
+
+function mapMarkers(array) {
+  $.each(array, function(index, value) {
+    var geoLocation = new google.maps.LatLng(array[index].dealLat + ", " + array[index].dealLon);
+    var thisRestaurant = array[index].dealName;
+    var marker = new google.maps.Marker({
+      position: geoLocation,
+      title: thisRestaurant,
+      map: map
     });
-  }
-});
-
-
-
+  });
+}
 
