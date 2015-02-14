@@ -3,3 +3,8 @@ html, body, #map-canvas {
   margin: 0;
   padding: 0;
 }
+
+#infowindow img {
+  float: left;
+  margin-right: 10px;
+}
