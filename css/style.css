@@ -8,3 +8,51 @@ html, body, #map-canvas {
   float: left;
   margin-right: 10px;
 }
+
+body {
+  positon: relative;
+}
+
+.results {
+  box-sizing: border-box;
+  position: absolute;
+  top: 25px;
+  right: 10px;
+  background: rgba(255,255,255, 0.9);
+  width: 25%;
+  height: 90%;
+  overflow: auto;
+  border: 1px solid gray;
+}
+
+.status-msg {
+  box-sizing: border-box;
+  font-size: 18px;
+  padding: 9px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #7b7b7b;
+}
+
+#results-list {
+  padding: 0;
+  list-style-type: none;
+}
+
+#results-list li {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0 24px;
+  cursor: pointer;
+}
+
+#results-list li h4 {
+  margin-bottom: 0;
+  color: #2A6496;
+}
+
+#results-list .address {
+  font-size: 12px;
+}
+
+#results-list p {
+  font-size: 14px;
+}

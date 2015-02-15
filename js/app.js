@@ -2,6 +2,22 @@ function appViewModel() {
   var self = this;
   var map, city, infowindow;
 
+  this.grouponDeals = ko.observableArray([]);
+  this.mapMarkers = ko.observableArray([]);
+  this.searchStatus = ko.observable('Searching for deals nearby...');
+
+  this.goToMarker = function(clickedDeal) {
+    var clickedDealName = clickedDeal.dealName;
+    for(var key in self.mapMarkers()) {
+      if(clickedDealName === self.mapMarkers()[key].marker.title) {
+        map.panTo(self.mapMarkers()[key].marker.position);
+        infowindow.setContent(self.mapMarkers()[key].content);
+        infowindow.open(map, self.mapMarkers()[key].marker);
+      }
+    }
+
+  };
+
 // Initialize Google map
   function mapInitialize() {
     city = new google.maps.LatLng(38.906830, -77.038599);
@@ -9,7 +25,7 @@ function appViewModel() {
           center: city,
           zoom: 14
         });
-    infowindow = new google.maps.InfoWindow();
+    infowindow = new google.maps.InfoWindow({maxWidth: 400});
     getGroupons();
   }
 
@@ -17,12 +33,11 @@ function appViewModel() {
   function getGroupons() {
     var grouponUrl = "https://partner-api.groupon.com/deals.json?tsToken=US_AFF_0_203644_212556_0&division_id=washington-dc&filters=category:food-and-drink&offset=0&radius=10&limit=20";
 
-    var grouponDeals = [];
-
     $.ajax({
       url: grouponUrl,
       dataType: 'jsonp',
       success: function(data) {
+        self.searchStatus('Deals found!');
         console.log(data);
         for(var i = 0; i < 20; i++) {
           var venueLocation = data.deals[i].options[0].redemptionLocations[0];
@@ -36,19 +51,21 @@ function appViewModel() {
               address = venueLocation.streetAddress1,
               city = venueLocation.city,
               state = venueLocation.state,
-              zip = venueLocation.postalCode;
+              zip = venueLocation.postalCode,
+              shortBlurb = data.deals[i].announcementTitle;
 
-          grouponDeals.push({
+          self.grouponDeals.push({
                               dealName: venueName, 
                               dealLat: venueLat, 
                               dealLon: venueLon, 
                               dealLink: gLink, 
                               dealImg: gImg, 
                               dealBlurb: blurb,
-                              dealAddress: address + "<br>" + city + ", " + state + " " + zip
+                              dealAddress: address + "<br>" + city + ", " + state + " " + zip,
+                              dealShortBlurb: shortBlurb
                             });
           }
-        mapMarkers(grouponDeals);
+        mapMarkers(self.grouponDeals());
       }
     });
   }
@@ -58,7 +75,7 @@ function appViewModel() {
     $.each(array, function(index, value) {
       var latitude = array[index].dealLat;
       var longitude = array[index].dealLon;
-      var geoLocation = new google.maps.LatLng(latitude, longitude);
+      var geoLoc = new google.maps.LatLng(latitude, longitude);
       var thisRestaurant = array[index].dealName;
 
       var contentString = '<div id="infowindow">' +
@@ -69,14 +86,18 @@ function appViewModel() {
       '<p>' + array[index].dealBlurb + '</p></div>';
 
       var marker = new google.maps.Marker({
-        position: geoLocation,
+        position: geoLoc,
         title: thisRestaurant,
         map: map
       });
 
+      self.mapMarkers.push({marker: marker, content: contentString});
+
       google.maps.event.addListener(marker, 'click', function() {
          infowindow.setContent(contentString);
          infowindow.open(map, marker);
+         console.log(self.grouponDeals());
+         console.log(self.mapMarkers());
        });
     });
   }

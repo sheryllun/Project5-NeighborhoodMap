@@ -8,7 +8,17 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="map-canvas"></div>
+  <div id="map-canvas"></div>
+  <div class="results">
+    <h2 class="status-msg" data-bind="text: searchStatus"></h2>
+    <ul id="results-list" data-bind="visible: mapMarkers().length > 0, foreach: grouponDeals">
+      <li data-bind="click: $parent.goToMarker">
+        <h4 data-bind="text: dealName"></h4>
+        <p class="address" data-bind="html: dealAddress"></p>
+        <p data-bind="text: dealShortBlurb"></p>
+      </li>
+    </ul>
+  </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCVzYqt4JIDK3C_xMQcNssaEKeDUxf45aA&libraries=places"></script>
   <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.js"></script>
