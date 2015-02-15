@@ -10,7 +10,30 @@ html, body, #map-canvas {
 }
 
 body {
-  positon: relative;
+  position: relative;
+  font-size: 14px;
+}
+
+.searchbar {
+  position: absolute;
+  top: 25px;
+  left: 10px;
+  background-color: rgba(255,255,255, 0.9);
+  border: 1px solid gray;
+  padding: 10px;
+}
+
+.searchbar input {
+  width: 250px;
+  padding: 5px;
+}
+
+#submit {
+  width: 80px;
+  padding: 7px;
+  border: none;
+  background: #2A6496;
+  color: white;
 }
 
 .results {
