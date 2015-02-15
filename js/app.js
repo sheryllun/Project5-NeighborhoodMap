@@ -7,7 +7,7 @@ function appViewModel() {
   this.grouponDeals = ko.observableArray([]);
   this.mapMarkers = ko.observableArray([]);
   this.searchStatus = ko.observable('Searching for deals nearby...');
-  this.searchLocation = ko.observable('washington-dc');
+  this.searchLocation = ko.observable('Washington DC');
 
 
   this.goToMarker = function(clickedDeal) {
@@ -22,16 +22,25 @@ function appViewModel() {
   };
 
   this.processSearch = function() {
-    var newAddress = self.searchLocation();
-    var newGrouponId;
-    console.log(grouponReadableNames);
+    //Need to use a jQuery selector instead of KO binding because this field is affected by the autocomplete plugin.  The value inputted does not seem to register via KO.
+    var newAddress = $('#autocomplete').val();
+    var newGrouponId, newLat, newLng;
     for(var i = 0; i < 171; i++) {
       var name = grouponLocations.divisions[i].name;
       if(newAddress == name) {
         newGrouponId = grouponLocations.divisions[i].id;
+        newLat = grouponLocations.divisions[i].lat;
+        newLng = grouponLocations.divisions[i].lng;
       }
     }
-    console.log(newGrouponId);
+    //clear our current deal and marker arrays
+    self.mapMarkers([]);
+    self.grouponDeals([]);
+
+    //perform new groupon search and center map to new location
+    getGroupons(newGrouponId);
+    map.panTo({lat: newLat, lng: newLng});
+
   };
 
 // Initialize Google map
@@ -39,10 +48,14 @@ function appViewModel() {
     city = new google.maps.LatLng(38.906830, -77.038599);
     map = new google.maps.Map(document.getElementById('map-canvas'), {
           center: city,
-          zoom: 14
+          zoom: 10,
+          zoomControlOptions: {
+            position: google.maps.ControlPosition.BOTTOM_LEFT
+          },
+          panControl: false
         });
     infowindow = new google.maps.InfoWindow({maxWidth: 400});
-    getGroupons(self.searchLocation());
+    getGroupons('washington-dc');
     getGrouponLocations();
   }
 
@@ -140,19 +153,16 @@ function appViewModel() {
           grouponReadableNames.push(readableName);
         }
 
-        // $('#autocomplete').autocomplete({
-        //   lookup: namesArray
-        // });
-
-        // var namesArray = $.map(grouponReadableNames, function (value, key) { return { value: value, data: key }; });
+        $('#autocomplete').autocomplete({
+          lookup: grouponReadableNames,
+          showNoSuggestionNotice: true,
+          noSuggestionNotice: 'Sorry, no matching results',
+        });
       }
     });
   }
 
-
-
   mapInitialize();
-
 
 }
 
