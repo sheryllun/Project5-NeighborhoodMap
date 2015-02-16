@@ -13,11 +13,14 @@
     <form data-bind="submit: processSearch">
       <input type="text" placeholder="Search for deals in your area" data-bind="value: searchLocation" id="autocomplete">
       <input type="submit" value="Search" id="submit">
+      <p data-bind="text: searchStatus"></p>
     </form>
   </div>
   <div class="results">
-    <h2 class="status-msg" data-bind="text: searchStatus"></h2>
-    <ul id="results-list" data-bind="visible: mapMarkers().length > 0, foreach: grouponDeals">
+    <h2 class="status-msg" data-bind="text: dealStatus"></h2>
+    <span class="toggler" data-bind="text: toggleSymbol, click: listToggle"></span>
+    <p class="waiting" data-bind="html: loadImg"></p>
+    <ul id="results-list" data-bind="visible: toggleSymbol() === 'hide', foreach: grouponDeals">
       <li data-bind="click: $parent.goToMarker">
         <h4 data-bind="text: dealName"></h4>
         <p class="address" data-bind="html: dealAddress"></p>

@@ -20,7 +20,7 @@ body {
   left: 10px;
   background-color: rgba(255,255,255, 0.9);
   border: 1px solid gray;
-  padding: 10px;
+  padding: 15px 10px 5px 10px;
 }
 
 .searchbar input {
@@ -43,9 +43,19 @@ body {
   right: 10px;
   background: rgba(255,255,255, 0.9);
   width: 25%;
-  height: 90%;
+  max-height: 90%;
   overflow: auto;
   border: 1px solid gray;
+}
+
+.toggler {
+  position: absolute;
+  top: 6px;
+  right: 14px;
+  font-size: 13px;
+  font-style: italic;
+  color: #a6a6a6;
+  cursor: pointer;
 }
 
 .status-msg {
@@ -54,6 +64,11 @@ body {
   padding: 9px 20px;
   border-bottom: 1px solid #e0e0e0;
   color: #7b7b7b;
+  display: inline-block;
+}
+
+.waiting {
+  text-align: center;
 }
 
 #results-list {

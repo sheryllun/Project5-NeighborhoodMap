@@ -6,10 +6,16 @@ function appViewModel() {
 
   this.grouponDeals = ko.observableArray([]);
   this.mapMarkers = ko.observableArray([]);
-  this.searchStatus = ko.observable('Searching for deals nearby...');
+  this.dealStatus = ko.observable('Searching for deals nearby...');
+  this.searchStatus = ko.observable();
   this.searchLocation = ko.observable('Washington DC');
+  this.loadImg = ko.observable();
+  this.numDeals = ko.computed(function() {
+    return self.grouponDeals().length;
+  });
+  this.toggleSymbol = ko.observable('hide');
 
-
+  // When a deal on the list is clicked, go to corresponding marker and open its info window.
   this.goToMarker = function(clickedDeal) {
     var clickedDealName = clickedDeal.dealName;
     for(var key in self.mapMarkers()) {
@@ -23,7 +29,11 @@ function appViewModel() {
 
   this.processSearch = function() {
     //Need to use a jQuery selector instead of KO binding because this field is affected by the autocomplete plugin.  The value inputted does not seem to register via KO.
+    self.searchStatus('');
+    self.searchStatus('Searching...');
     var newAddress = $('#autocomplete').val();
+
+    //newGrouponId will hold the Groupon-formatted ID of the inputted city.
     var newGrouponId, newLat, newLng;
     for(var i = 0; i < 171; i++) {
       var name = grouponLocations.divisions[i].name;
@@ -31,19 +41,35 @@ function appViewModel() {
         newGrouponId = grouponLocations.divisions[i].id;
         newLat = grouponLocations.divisions[i].lat;
         newLng = grouponLocations.divisions[i].lng;
-      }
+      } 
     }
-    //clear our current deal and marker arrays
-    self.mapMarkers([]);
-    self.grouponDeals([]);
 
-    //perform new groupon search and center map to new location
-    getGroupons(newGrouponId);
-    map.panTo({lat: newLat, lng: newLng});
+    if(!newGrouponId) {
+      return self.searchStatus('Not a valid location, search again.');
+    } else {
+      //Replace current location with new (human-formatted) location for display in other KO bindings.
+      self.searchLocation(newAddress);
 
+      //clear our current deal and marker arrays
+      self.mapMarkers([]);
+      self.grouponDeals([]);
+      self.dealStatus('Loading...');
+      self.loadImg('<img src="img/ajax-loader.gif">');
+      //perform new groupon search and center map to new location
+      getGroupons(newGrouponId);
+      map.panTo({lat: newLat, lng: newLng});
+    }
   };
 
-// Initialize Google map
+  this.listToggle = function() {
+    if(self.toggleSymbol() === 'hide') {
+      self.toggleSymbol('show');
+    } else {
+      self.toggleSymbol('hide');
+    }
+  };
+
+// Initialize Google map, perform initial deal search on a city.
   function mapInitialize() {
     city = new google.maps.LatLng(38.906830, -77.038599);
     map = new google.maps.Map(document.getElementById('map-canvas'), {
@@ -61,7 +87,7 @@ function appViewModel() {
 
 // Use API to get deal data and store the info as objects in an array
   function getGroupons(location) {
-    var grouponUrl = "https://partner-api.groupon.com/deals.json?tsToken=US_AFF_0_203644_212556_0&filters=category:food-and-drink&offset=0&radius=10&limit=20&division_id=";
+    var grouponUrl = "https://partner-api.groupon.com/deals.json?tsToken=US_AFF_0_203644_212556_0&filters=category:food-and-drink&limit=30&offset=0&division_id=";
 
     var divId = location;
 
@@ -69,11 +95,11 @@ function appViewModel() {
       url: grouponUrl + divId,
       dataType: 'jsonp',
       success: function(data) {
-        self.searchStatus('Deals found!');
         console.log(data);
-        for(var i = 0; i < 20; i++) {
+        var len = data.deals.length;
+        for(var i = 0; i < len; i++) {
           var venueLocation = data.deals[i].options[0].redemptionLocations[0];
-            if (venueLocation === undefined) continue;
+            if (data.deals[i].options[0].redemptionLocations[0] === undefined) continue;
           var venueName = data.deals[i].merchant.name;
               venueLat = venueLocation.lat,
               venueLon = venueLocation.lng,
@@ -100,9 +126,11 @@ function appViewModel() {
           });
         }
         mapMarkers(self.grouponDeals());
+        self.searchStatus('');
+        self.loadImg('');
       },
       error: function() {
-        self.searchStatus('Oops, something went wrong, please try again.');
+        self.dealStatus('Oops, something went wrong, please try again.');
       }
     });
   }
@@ -130,6 +158,9 @@ function appViewModel() {
 
       self.mapMarkers.push({marker: marker, content: contentString});
 
+      self.dealStatus(self.numDeals() + ' deals found near ' + self.searchLocation());
+
+      //generate infowindows for each deal
       google.maps.event.addListener(marker, 'click', function() {
          infowindow.setContent(contentString);
          infowindow.open(map, marker);
@@ -140,7 +171,7 @@ function appViewModel() {
     });
   }
 
-// Groupon's deal locations have a separate ID than the human-readable name (eg washington-dc instead of Washington, DC). This ajax call uses the Groupon Division API to pull a list of IDs and their corresponding names to use in the search bar.
+// Groupon's deal locations have a separate ID than the human-readable name (eg washington-dc instead of Washington DC). This ajax call uses the Groupon Division API to pull a list of IDs and their corresponding names to use in the search bar.
 
   function getGrouponLocations() {
     $.ajax({
@@ -158,6 +189,9 @@ function appViewModel() {
           showNoSuggestionNotice: true,
           noSuggestionNotice: 'Sorry, no matching results',
         });
+      },
+      error: function() {
+        self.dealStatus('Oops, something went wrong, please reload the page and try again.');
       }
     });
   }
