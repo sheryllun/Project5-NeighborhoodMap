@@ -21,6 +21,7 @@ function appViewModel() {
     for(var key in self.mapMarkers()) {
       if(clickedDealName === self.mapMarkers()[key].marker.title) {
         map.panTo(self.mapMarkers()[key].marker.position);
+        map.setZoom(14);
         infowindow.setContent(self.mapMarkers()[key].content);
         infowindow.open(map, self.mapMarkers()[key].marker);
       }
@@ -44,14 +45,15 @@ function appViewModel() {
       } 
     }
 
+    //Form validation - if user enters an invalid location, return error.
     if(!newGrouponId) {
-      return self.searchStatus('Not a valid location, search again.');
+      return self.searchStatus('Not a valid location, try again.');
     } else {
       //Replace current location with new (human-formatted) location for display in other KO bindings.
       self.searchLocation(newAddress);
 
       //clear our current deal and marker arrays
-      self.mapMarkers([]);
+      clearMarkers();
       self.grouponDeals([]);
       self.dealStatus('Loading...');
       self.loadImg('<img src="img/ajax-loader.gif">');
@@ -76,8 +78,12 @@ function appViewModel() {
           center: city,
           zoom: 10,
           zoomControlOptions: {
-            position: google.maps.ControlPosition.BOTTOM_LEFT
+            position: google.maps.ControlPosition.LEFT_CENTER,
+            style: google.maps.ZoomControlStyle.SMALL
           },
+          streetViewControlOptions: {
+            position: google.maps.ControlPosition.LEFT_BOTTOM
+            },
           panControl: false
         });
     infowindow = new google.maps.InfoWindow({maxWidth: 400});
@@ -158,17 +164,26 @@ function appViewModel() {
 
       self.mapMarkers.push({marker: marker, content: contentString});
 
-      self.dealStatus(self.numDeals() + ' deals found near ' + self.searchLocation());
+      self.dealStatus(self.numDeals() + ' food and drink deals found near ' + self.searchLocation());
 
       //generate infowindows for each deal
       google.maps.event.addListener(marker, 'click', function() {
          infowindow.setContent(contentString);
+         map.setZoom(14);
          infowindow.open(map, marker);
          console.log(self.grouponDeals());
          console.log(self.mapMarkers());
          console.log(grouponLocations);
        });
     });
+  }
+
+// Clear markers from map and array
+  function clearMarkers() {
+    $.each(self.mapMarkers(), function(key, value) {
+      value.marker.setMap(null);
+    });
+    self.mapMarkers([]);
   }
 
 // Groupon's deal locations have a separate ID than the human-readable name (eg washington-dc instead of Washington DC). This ajax call uses the Groupon Division API to pull a list of IDs and their corresponding names to use in the search bar.

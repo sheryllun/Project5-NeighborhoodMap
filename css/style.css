@@ -62,9 +62,8 @@ body {
   box-sizing: border-box;
   font-size: 18px;
   padding: 9px 20px;
-  border-bottom: 1px solid #e0e0e0;
   color: #7b7b7b;
-  display: inline-block;
+  margin-bottom: 0;
 }
 
 .waiting {
@@ -77,7 +76,7 @@ body {
 }
 
 #results-list li {
-  border-bottom: 1px solid #e0e0e0;
+  border-top: 1px solid #e0e0e0;
   padding: 0 24px;
   cursor: pointer;
 }
@@ -100,6 +99,6 @@ body {
 .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
 .autocomplete-no-suggestion { padding: 2px 5px;}
 .autocomplete-selected { background: #F0F0F0; }
-.autocomplete-suggestions strong { font-weight: bold; color: #000; }
+.autocomplete-suggestions strong { font-weight: bold; color: #19C1CF; }
 .autocomplete-group { padding: 2px 5px; }
 .autocomplete-group strong { font-weight: bold; font-size: 16px; color: #000; display: block; border-bottom: 1px solid #000; }
