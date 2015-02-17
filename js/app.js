@@ -28,6 +28,7 @@ function appViewModel() {
     }
   };
 
+  // Handle the input given when user searches for deals in a location
   this.processSearch = function() {
     //Need to use a jQuery selector instead of KO binding because this field is affected by the autocomplete plugin.  The value inputted does not seem to register via KO.
     self.searchStatus('');
@@ -116,8 +117,15 @@ function appViewModel() {
               city = venueLocation.city,
               state = venueLocation.state,
               zip = venueLocation.postalCode,
-              shortBlurb = data.deals[i].announcementTitle,
-              tags = data.deals[i].tags;
+              shortBlurb = data.deals[i].announcementTitle;
+
+          // Some venues have a Yelp rating included. If there is no rating, function will stop executing because the variable is undefined. This if statement handles that error.
+          var rating;
+
+          if(data.deals[i].merchant.ratings[0] === undefined) { rating = "not rated";
+          } else {
+            rating = data.deals[i].merchant.ratings[0].rating + " out of 5";
+          }
 
           self.grouponDeals.push({
             dealName: venueName, 
@@ -128,7 +136,7 @@ function appViewModel() {
             dealBlurb: blurb,
             dealAddress: address + "<br>" + city + ", " + state + " " + zip,
             dealShortBlurb: shortBlurb,
-            dealTags: tags
+            dealRating: rating
           });
         }
         mapMarkers(self.grouponDeals());
@@ -186,7 +194,7 @@ function appViewModel() {
     self.mapMarkers([]);
   }
 
-// Groupon's deal locations have a separate ID than the human-readable name (eg washington-dc instead of Washington DC). This ajax call uses the Groupon Division API to pull a list of IDs and their corresponding names to use in the search bar.
+// Groupon's deal locations have a separate ID than the human-readable name (eg washington-dc instead of Washington DC). This ajax call uses the Groupon Division API to pull a list of IDs and their corresponding names to use for validation in the search bar.
 
   function getGrouponLocations() {
     $.ajax({
