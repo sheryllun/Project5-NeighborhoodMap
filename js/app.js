@@ -87,6 +87,13 @@ function appViewModel() {
             },
           panControl: false
         });
+
+    google.maps.event.addDomListener(window, "resize", function() {
+       var center = map.getCenter();
+       google.maps.event.trigger(map, "resize");
+       map.setCenter(center); 
+    });
+
     infowindow = new google.maps.InfoWindow({maxWidth: 400});
     getGroupons('washington-dc');
     getGrouponLocations();
@@ -122,9 +129,11 @@ function appViewModel() {
           // Some venues have a Yelp rating included. If there is no rating, function will stop executing because the variable is undefined. This if statement handles that error.
           var rating;
 
-          if(data.deals[i].merchant.ratings[0] === undefined) { rating = "not rated";
+          if(data.deals[i].merchant.ratings[0] === undefined) { rating = '';
           } else {
-            rating = data.deals[i].merchant.ratings[0].rating + " out of 5";
+            var num = data.deals[i].merchant.ratings[0].rating;
+            var decimal = num.toFixed(1);
+            rating = '<img src="img/burst_tiny.png"> ' + decimal + ' <span>out of 5</span>';
           }
 
           self.grouponDeals.push({
@@ -145,6 +154,7 @@ function appViewModel() {
       },
       error: function() {
         self.dealStatus('Oops, something went wrong, please try again.');
+        self.loadImg('');
       }
     });
   }
@@ -178,6 +188,7 @@ function appViewModel() {
       google.maps.event.addListener(marker, 'click', function() {
          infowindow.setContent(contentString);
          map.setZoom(14);
+         map.setCenter(marker.position);
          infowindow.open(map, marker);
          console.log(self.grouponDeals());
          console.log(self.mapMarkers());
@@ -215,8 +226,15 @@ function appViewModel() {
       },
       error: function() {
         self.dealStatus('Oops, something went wrong, please reload the page and try again.');
+        self.loadImg('');
       }
     });
+  }
+
+  this.mobileShow = ko.observable(false);
+
+   this.mobileOpenList = function() {
+    self.mobileShow(true);
   }
 
   mapInitialize();

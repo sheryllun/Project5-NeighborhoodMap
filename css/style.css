@@ -4,6 +4,7 @@ html, body, #map-canvas {
   padding: 0;
 }
 
+
 #infowindow img {
   float: left;
   margin-right: 10px;
@@ -44,9 +45,9 @@ body {
   background: rgba(255,255,255, 0.9);
   width: 25%;
   max-height: 90%;
-  overflow: auto;
   border: 1px solid gray;
 }
+
 
 .toggler {
   position: absolute;
@@ -73,6 +74,8 @@ body {
 #results-list {
   padding: 0;
   list-style-type: none;
+  overflow: auto;
+  height: 450px;
 }
 
 #results-list li {
@@ -88,11 +91,46 @@ body {
 
 #results-list .address {
   font-size: 12px;
+  line-height: 1.4;
+  margin-top: 4px;
 }
 
 #results-list p {
   font-size: 14px;
 }
+
+.rating {
+  color: #810000;
+  font-weight: bold;
+}
+
+.rating span {
+  font-size: 12px;
+  font-style: italic;
+  color: black;
+}
+
+.mobilebutton {
+  color: #2A6496;
+  position: fixed;
+  top: 26px;
+  left: 330px;
+}
+
+.mobile-close {
+  display: inline-block;
+  padding: 5px 10px;
+  color: gray;
+}
+
+.mobileresults {
+  position: fixed;
+  top: 65px;
+  left: 5px;
+  background-color: rgba(250,250,250, .9);
+  max-width: 350px;
+}
+
 
 /*Autocomplete styles*/
 .autocomplete-suggestions { border: 1px solid #999; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); }

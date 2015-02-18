@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Neighborhood Map</title>
   <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -17,18 +18,45 @@
     </form>
   </div>
   <div class="results">
-    <h2 class="status-msg" data-bind="text: dealStatus"></h2>
-    <span class="toggler" data-bind="text: toggleSymbol, click: listToggle"></span>
-    <p class="waiting" data-bind="html: loadImg"></p>
-    <ul id="results-list" data-bind="visible: toggleSymbol() === 'hide', foreach: grouponDeals">
-      <li data-bind="click: $parent.goToMarker">
-        <h4 data-bind="text: dealName"></h4>
-        <p class="address" data-bind="html: dealAddress"></p>
-        <p data-bind="text: dealShortBlurb"></p>
-        <p>Rating: <span data-bind="text: dealRating"></span> </p>
-      </li>
-    </ul>
+    <div>
+      <h2 class="status-msg" data-bind="text: dealStatus"></h2>
+      <span class="toggler" data-bind="text: toggleSymbol, click: listToggle"></span>
+    </div>
+    <div>
+      <p class="waiting" data-bind="html: loadImg"></p>
+      <ul id="results-list" data-bind="visible: toggleSymbol() === 'hide', foreach: grouponDeals">
+        <li data-bind="click: $parent.goToMarker">
+          <h4 data-bind="text: dealName"></h4>
+          <p class="address" data-bind="html: dealAddress"></p>
+          <p data-bind="text: dealShortBlurb"></p>
+          <p data-bind="html: dealRating" class="rating"></p>
+        </li>
+      </ul>
+    </div>
   </div>
+
+  <div class="mobilebutton" data-bind="click: mobileOpenList">
+    <i class="fa fa-bars fa-2x"></i>
+  </div>
+  
+  <div class="mobileresults" data-bind="visible: mobileShow() === true">
+    <div>
+      <i class="fa fa-times mobile-close"></i>
+      <h2 class="status-msg" data-bind="text: dealStatus"></h2>
+    </div>
+    <div>
+      <p class="waiting" data-bind="html: loadImg"></p>
+      <ul id="results-list" data-bind="visible: toggleSymbol() === 'hide', foreach: grouponDeals">
+        <li data-bind="click: $parent.goToMarker">
+          <h4 data-bind="text: dealName"></h4>
+          <p class="address" data-bind="html: dealAddress"></p>
+          <p data-bind="text: dealShortBlurb"></p>
+          <p data-bind="html: dealRating" class="rating"></p>
+        </li>
+      </ul>
+    </div>
+  </div>
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places?key=AIzaSyCVzYqt4JIDK3C_xMQcNssaEKeDUxf45aA"></script>
   <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.js"></script>
