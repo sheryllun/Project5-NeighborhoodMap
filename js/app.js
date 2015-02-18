@@ -24,6 +24,7 @@ function appViewModel() {
         map.setZoom(14);
         infowindow.setContent(self.mapMarkers()[key].content);
         infowindow.open(map, self.mapMarkers()[key].marker);
+        self.mobileShow(false);
       }
     }
   };
@@ -190,9 +191,6 @@ function appViewModel() {
          map.setZoom(14);
          map.setCenter(marker.position);
          infowindow.open(map, marker);
-         console.log(self.grouponDeals());
-         console.log(self.mapMarkers());
-         console.log(grouponLocations);
        });
     });
   }
@@ -231,7 +229,10 @@ function appViewModel() {
     });
   }
 
+  //Manages the toggling of the list view and search bar on a mobile device.
+
   this.mobileShow = ko.observable(false);
+  this.searchBarShow = ko.observable(true);
 
    this.mobileOpenList = function() {
     self.mobileShow(true);
@@ -239,7 +240,15 @@ function appViewModel() {
 
   this.mobileCloseList = function() {
     self.mobileShow(false);
-  }
+  };
+
+  this.searchToggle = function() {
+    if(self.searchBarShow() === true) {
+      self.searchBarShow(false);
+    } else {
+      self.searchBarShow(true);
+    }
+  };
 
   mapInitialize();
 

@@ -15,6 +15,18 @@ body {
   font-size: 14px;
 }
 
+.searchbtn {
+  display: none;
+  color: black;
+  background-color: rgba(255, 255, 255, .9);
+  position: absolute;
+  top: 37px;
+  right: 90px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+}
+
 .searchbar {
   position: absolute;
   top: 25px;
@@ -148,13 +160,25 @@ body {
   }
 
   .searchbar input {
-    width: 150px;
+    width: 130px;
+  }
+
+  #submit {
+    width: 70px;
   }
 
   .status-msg {
     padding: 0 18px;
     font-size: 16px;
   }
+
+  .searchbtn {
+    display: inline;
+  }
+
+/*  .searchbar {
+    display: none;
+  }*/
 }
 
 
