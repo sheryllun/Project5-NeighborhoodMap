@@ -94,7 +94,7 @@ function appViewModel() {
        map.setCenter(center); 
     });
 
-    infowindow = new google.maps.InfoWindow({maxWidth: 400});
+    infowindow = new google.maps.InfoWindow({maxWidth: 300});
     getGroupons('washington-dc');
     getGrouponLocations();
   }
@@ -235,6 +235,10 @@ function appViewModel() {
 
    this.mobileOpenList = function() {
     self.mobileShow(true);
+  };
+
+  this.mobileCloseList = function() {
+    self.mobileShow(false);
   }
 
   mapInitialize();

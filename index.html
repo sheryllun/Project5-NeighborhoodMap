@@ -35,13 +35,14 @@
     </div>
   </div>
 
+<!-- Mobile list of results, hidden until media query is activated -->
   <div class="mobilebutton" data-bind="click: mobileOpenList">
     <i class="fa fa-bars fa-2x"></i>
   </div>
-  
+
   <div class="mobileresults" data-bind="visible: mobileShow() === true">
     <div>
-      <i class="fa fa-times mobile-close"></i>
+      <i class="fa fa-times mobile-close" data-bind="click: mobileCloseList"></i>
       <h2 class="status-msg" data-bind="text: dealStatus"></h2>
     </div>
     <div>
