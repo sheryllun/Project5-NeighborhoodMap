@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <title>Neighborhood Map</title>
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -41,13 +41,12 @@
     <i class="fa fa-search"></i>
   </div>
 
-  <div class="mobilebutton" data-bind="click: mobileOpenList">
+  <div class="mobilebutton" data-bind="click: mobileToggleList">
     <i class="fa fa-bars"></i>
   </div>
 
   <div class="mobileresults" data-bind="visible: mobileShow() === true">
     <div>
-      <i class="fa fa-times mobile-close" data-bind="click: mobileCloseList"></i>
       <h2 class="status-msg" data-bind="text: dealStatus"></h2>
     </div>
     <div>

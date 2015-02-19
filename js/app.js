@@ -45,7 +45,6 @@ function appViewModel() {
         newLat = grouponLocations.divisions[i].lat;
         newLng = grouponLocations.divisions[i].lng;
       }
-      google.maps.event.trigger(map, "resize");
     }
 
     //Form validation - if user enters an invalid location, return error.
@@ -235,16 +234,12 @@ function appViewModel() {
   this.mobileShow = ko.observable(false);
   this.searchBarShow = ko.observable(true);
 
-   this.mobileOpenList = function() {
+   this.mobileToggleList = function() {
     if(self.mobileShow() === false) {
       self.mobileShow(true);
     } else {
       self.mobileShow(false);
     }
-  };
-
-  this.mobileCloseList = function() {
-    self.mobileShow(false);
   };
 
   this.searchToggle = function() {
