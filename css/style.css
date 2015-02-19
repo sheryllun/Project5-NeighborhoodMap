@@ -20,11 +20,12 @@ body {
   color: black;
   background-color: rgba(255, 255, 255, .9);
   position: absolute;
-  top: 37px;
-  right: 90px;
+  top: 36px;
+  right: 50px;
   cursor: pointer;
-  padding: 5px;
+  padding: 7px 6px;
   border-radius: 4px;
+  border: 2px solid #9ac2c3;
 }
 
 .searchbar {
@@ -128,10 +129,11 @@ body {
   background-color: rgba(255, 255, 255, .9);
   position: absolute;
   top: 37px;
-  right: 40px;
+  right: 13px;
   cursor: pointer;
   padding: 5px;
   border-radius: 4px;
+  border: 2px solid #9ac2c3 ;
 }
 
 .mobile-close {
@@ -175,10 +177,17 @@ body {
   .searchbtn {
     display: inline;
   }
+}
 
-/*  .searchbar {
+@media only screen and (max-width: 499px) {
+  .mobileresults {
+    right: 10%;
+    width: 65%;
+  }
+
+  .mobile-close {
     display: none;
-  }*/
+  }
 }
 
 

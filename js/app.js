@@ -174,7 +174,6 @@ function appViewModel() {
       '<p>' + array[index].dealAddress + '</p>' +
       '<p><a href="' + array[index].dealLink + '" target="_blank">Click to view deal</a></p>' +
       '<p>' + array[index].dealBlurb + '</p></div>';
-
       var marker = new google.maps.Marker({
         position: geoLoc,
         title: thisRestaurant,
@@ -235,7 +234,11 @@ function appViewModel() {
   this.searchBarShow = ko.observable(true);
 
    this.mobileOpenList = function() {
-    self.mobileShow(true);
+    if(self.mobileShow() === false) {
+      self.mobileShow(true);
+    } else {
+      self.mobileShow(false);
+    }
   };
 
   this.mobileCloseList = function() {
