@@ -229,6 +229,7 @@ function appViewModel() {
     });
   }
 
+
   //Manages the toggling of the list view and search bar on a mobile device.
 
   this.mobileShow = ko.observable(false);
@@ -254,5 +255,14 @@ function appViewModel() {
 
 }
 
+//custom binding highlights the search text on focus
+
+ko.bindingHandlers.selectOnFocus = {
+        update: function (element) {
+          ko.utils.registerEventHandler(element, 'focus', function (e) {
+            element.select();
+          });
+        }
+      };
 
 ko.applyBindings(new appViewModel());

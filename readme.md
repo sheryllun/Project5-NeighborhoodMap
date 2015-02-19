@@ -27,3 +27,4 @@ Resources Used
 * Groupon API Documentation
 * DesignShack Blog - [Autocomplete Plugin](http://designshack.net/articles/javascript/create-a-simple-autocomplete-with-html5-jquery/)
 * DevBridge [JQuery Autocomplete](https://github.com/devbridge/jQuery-Autocomplete)
+* [Select on Focus] (http://one-com.github.io/knockout-select-on-focus/)

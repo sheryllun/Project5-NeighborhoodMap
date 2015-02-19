@@ -13,7 +13,7 @@
 
   <div class="searchbar" data-bind="visible: searchBarShow() === true">
     <form data-bind="submit: processSearch">
-      <input type="text" placeholder="Search for deals in your area" data-bind="value: searchLocation" id="autocomplete">
+      <input type="text" placeholder="Search for deals in your area" data-bind="value: searchLocation, selectOnFocus: true" id="autocomplete">
       <input type="submit" value="Search" id="submit">
       <p data-bind="text: searchStatus"></p>
     </form>
