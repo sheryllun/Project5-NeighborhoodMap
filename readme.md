@@ -1,8 +1,7 @@
 "CheapSheet" - Udacity Neighborhood Map Project
-===================
+--------
 
 Do you like eating out but don't enjoy paying full price?  Find deals on the fly, where-ever you live. Try it out here: [View CheapSheet!](http://sheryllun.github.io/Project5-NeighborhoodMap) Oh - and it's mobile friendly so keep it saved on your phone!
----------
 
 ***
 
