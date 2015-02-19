@@ -44,7 +44,8 @@ function appViewModel() {
         newGrouponId = grouponLocations.divisions[i].id;
         newLat = grouponLocations.divisions[i].lat;
         newLng = grouponLocations.divisions[i].lng;
-      } 
+      }
+      google.maps.event.trigger(map, "resize");
     }
 
     //Form validation - if user enters an invalid location, return error.
@@ -172,6 +173,7 @@ function appViewModel() {
       '<img src="' + array[index].dealImg + '">' +
       '<h2>' + array[index].dealName + '</h2>' +
       '<p>' + array[index].dealAddress + '</p>' +
+      '<p class="rating">' + array[index].dealRating + '</p>' +
       '<p><a href="' + array[index].dealLink + '" target="_blank">Click to view deal</a></p>' +
       '<p>' + array[index].dealBlurb + '</p></div>';
       var marker = new google.maps.Marker({
