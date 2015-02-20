@@ -13,6 +13,8 @@ function appViewModel() {
   this.numDeals = ko.computed(function() {
     return self.grouponDeals().length;
   });
+
+  //Holds value for list togglings
   this.toggleSymbol = ko.observable('hide');
 
   //Hold the current location's lat & lng - useful for re-centering map
@@ -258,6 +260,7 @@ function appViewModel() {
 
   //Re-center map to current city if you're viewing deals that are further away
   this.centerMap = function() {
+    infowindow.close();
     map.panTo({lat: self.currentLat(), lng: self.currentLng()});
     map.setZoom(10);
   };
