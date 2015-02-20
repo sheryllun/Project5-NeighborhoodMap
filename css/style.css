@@ -15,17 +15,22 @@ body {
   font-size: 14px;
 }
 
-.searchbtn {
+.searchbtn, .locbtn {
   display: none;
   color: black;
   background-color: rgba(255, 255, 255, .9);
   position: absolute;
   top: 36px;
-  right: 50px;
+  right: 78px;
   cursor: pointer;
   padding: 7px 6px;
   border-radius: 4px;
   border: 2px solid #9ac2c3;
+}
+
+.locbtn {
+  top: 36px;
+  right: 45px;
 }
 
 .searchbar {
@@ -166,7 +171,7 @@ body {
   }
 
   #submit {
-    width: 70px;
+    width: 50px;
   }
 
   .status-msg {
@@ -174,7 +179,7 @@ body {
     font-size: 16px;
   }
 
-  .searchbtn {
+  .searchbtn, .locbtn {
     display: inline;
   }
 }
@@ -183,10 +188,6 @@ body {
   .mobileresults {
     right: 10%;
     width: 65%;
-  }
-
-  .mobile-close {
-    display: none;
   }
 }
 

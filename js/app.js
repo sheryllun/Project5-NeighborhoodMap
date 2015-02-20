@@ -15,6 +15,10 @@ function appViewModel() {
   });
   this.toggleSymbol = ko.observable('hide');
 
+  //Hold the current location's lat & lng - useful for re-centering map
+  this.currentLat = ko.observable(38.906830);
+  this.currentLng = ko.observable(-77.038599);
+
   // When a deal on the list is clicked, go to corresponding marker and open its info window.
   this.goToMarker = function(clickedDeal) {
     var clickedDealName = clickedDeal.dealName;
@@ -42,8 +46,8 @@ function appViewModel() {
       var name = grouponLocations.divisions[i].name;
       if(newAddress == name) {
         newGrouponId = grouponLocations.divisions[i].id;
-        newLat = grouponLocations.divisions[i].lat;
-        newLng = grouponLocations.divisions[i].lng;
+        self.currentLat(grouponLocations.divisions[i].lat);
+        self.currentLng(grouponLocations.divisions[i].lng);
       }
     }
 
@@ -61,7 +65,7 @@ function appViewModel() {
       self.loadImg('<img src="img/ajax-loader.gif">');
       //perform new groupon search and center map to new location
       getGroupons(newGrouponId);
-      map.panTo({lat: newLat, lng: newLng});
+      map.panTo({lat: self.currentLat(), lng: self.currentLng()});
     }
   };
 
@@ -230,7 +234,7 @@ function appViewModel() {
   }
 
 
-  //Manages the toggling of the list view and search bar on a mobile device.
+  //Manages the toggling of the list view, location centering, and search bar on a mobile device.
 
   this.mobileShow = ko.observable(false);
   this.searchBarShow = ko.observable(true);
@@ -249,6 +253,12 @@ function appViewModel() {
     } else {
       self.searchBarShow(true);
     }
+  };
+
+  //Re-center map to current city if you're viewing deals that are further away
+  this.centerMap = function() {
+    map.panTo({lat: self.currentLat(), lng: self.currentLng()});
+    map.setZoom(10);
   };
 
   mapInitialize();

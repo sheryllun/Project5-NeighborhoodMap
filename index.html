@@ -13,8 +13,8 @@
 
   <div class="searchbar" data-bind="visible: searchBarShow() === true">
     <form data-bind="submit: processSearch">
-      <input type="text" placeholder="Search for deals in your area" data-bind="value: searchLocation, selectOnFocus: true" id="autocomplete">
-      <input type="submit" value="Search" id="submit">
+      <input type="text" placeholder="Find deals in your area" data-bind="value: searchLocation, selectOnFocus: true" id="autocomplete">
+      <input type="submit" value="Go!" id="submit">
       <p data-bind="text: searchStatus"></p>
     </form>
   </div>
@@ -39,6 +39,10 @@
 <!-- Mobile list of results, hidden until media query is activated -->
   <div class="searchbtn" data-bind="click: searchToggle">
     <i class="fa fa-search"></i>
+  </div>
+
+  <div class="locbtn" data-bind="click: centerMap">
+    <i class="fa fa-compass"></i>
   </div>
 
   <div class="mobilebutton" data-bind="click: mobileToggleList">
