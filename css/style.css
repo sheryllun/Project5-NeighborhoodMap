@@ -4,6 +4,17 @@ html, body, #map-canvas {
   padding: 0;
 }
 
+#infowindow {
+  height: 200px;
+}
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: RGBA(42, 100, 150, .8);
+}
 
 #infowindow img {
   float: left;
