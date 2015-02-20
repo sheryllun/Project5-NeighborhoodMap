@@ -90,6 +90,7 @@ function appViewModel() {
           streetViewControlOptions: {
             position: google.maps.ControlPosition.LEFT_BOTTOM
             },
+          mapTypeControl: false,
           panControl: false
         });
 

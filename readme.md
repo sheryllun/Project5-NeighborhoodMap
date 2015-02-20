@@ -12,6 +12,7 @@ Features
 * Search produces top thirty results near your requested area
 * Integrated list view links to corresponding map marker on click
 * Mobile friendly view hides list and search bar until you need it
+* Re-center your map if you stray too far
 * Venue ratings (if available) help you decide whether the restaurant is a go or a no!
 
 ***
