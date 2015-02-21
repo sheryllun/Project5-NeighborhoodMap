@@ -31,6 +31,7 @@ function appViewModel() {
         infowindow.setContent(self.mapMarkers()[key].content);
         infowindow.open(map, self.mapMarkers()[key].marker);
         self.mobileShow(false);
+        self.searchStatus('');
       }
     }
   };
@@ -194,6 +195,7 @@ function appViewModel() {
 
       //generate infowindows for each deal
       google.maps.event.addListener(marker, 'click', function() {
+        self.searchStatus('');
          infowindow.setContent(contentString);
          map.setZoom(14);
          map.setCenter(marker.position);
@@ -261,8 +263,15 @@ function appViewModel() {
   //Re-center map to current city if you're viewing deals that are further away
   this.centerMap = function() {
     infowindow.close();
-    map.panTo({lat: self.currentLat(), lng: self.currentLng()});
-    map.setZoom(10);
+    var currCenter = map.getCenter();
+    var cityCenter = new google.maps.LatLng(self.currentLat(), self.currentLng());
+    if((cityCenter.k == currCenter.k) && (cityCenter.D == currCenter.D)) {
+      return self.searchStatus('Map is already centered.');
+    } else {
+      self.searchStatus('');
+      map.panTo(cityCenter);
+      map.setZoom(10);
+    }
   };
 
   mapInitialize();
