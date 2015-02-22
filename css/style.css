@@ -76,6 +76,12 @@ body {
   background: green;
 }
 
+.clearbutton {
+  cursor: pointer;
+  text-decoration: underline;
+  color: #2a6496;
+}
+
 #submit {
   width: 80px;
   padding: 7px;

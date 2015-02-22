@@ -5,14 +5,14 @@ function appViewModel() {
   var grouponReadableNames = [];
 
   this.grouponDeals = ko.observableArray([]);
-  // this.filterKeyword = ko.observable('`');
+  this.filteredList = ko.observableArray([]);
   this.mapMarkers = ko.observableArray([]);
   this.dealStatus = ko.observable('Searching for deals nearby...');
   this.searchStatus = ko.observable();
   this.searchLocation = ko.observable('Washington DC');
   this.loadImg = ko.observable();
   this.numDeals = ko.computed(function() {
-    return self.grouponDeals().length;
+    return self.filteredList().length;
   });
 
   //Holds value for list togglings
@@ -65,11 +65,44 @@ function appViewModel() {
       //clear our current deal and marker arrays
       clearMarkers();
       self.grouponDeals([]);
+      self.filteredList([]);
       self.dealStatus('Loading...');
       self.loadImg('<img src="img/ajax-loader.gif">');
       //perform new groupon search and center map to new location
       getGroupons(newGrouponId);
       map.panTo({lat: self.currentLat(), lng: self.currentLng()});
+    }
+  };
+
+  this.filterKeyword = ko.observable('');
+
+  this.filterResults = function() {
+    var searchWord = self.filterKeyword().toLowerCase();
+    var array = self.grouponDeals();
+    if(!searchWord) {
+      return;
+    } else {
+      self.filteredList([]);
+      for(var i=0; i < array.length; i++) {
+        for(var j = 0; j < array[i].dealTags.length; j++) {
+          if((array[i].dealTags[j].name.toLowerCase().indexOf(searchWord) != -1 || array[i].dealName.toLowerCase().indexOf(searchWord) != -1)) {
+            self.mapMarkers()[i].marker.setMap(map);
+            self.filteredList.push(array[i]);
+          } else {
+            self.mapMarkers()[i].marker.setMap(null);
+          }
+        }
+      }
+      self.dealStatus(self.numDeals() + ' deals found for ' + self.filterKeyword());
+    }
+  };
+
+  this.clearFilter = function() {
+    self.filteredList(self.grouponDeals());
+    self.dealStatus(self.numDeals() + ' food and drink deals found near ' + self.searchLocation());
+    self.filterKeyword('');
+    for(var i = 0; i < self.mapMarkers().length; i++) {
+      self.mapMarkers()[i].marker.setMap(map);
     }
   };
 
@@ -113,23 +146,6 @@ function appViewModel() {
     getGroupons('washington-dc');
     getGrouponLocations();
   }
-
-  // this.filter = ko.observableArray(self.grouponDeals());
-
-  // this.filterResults = function() {
-  //   var searchWord = self.filterKeyword().toLowerCase();
-  //   var array = self.grouponDeals();
-  //   for(var i=0; i < array.length; i++) {
-  //     for(var j = 0; j < array[i].dealTags.length; j++) {
-  //       if(array[i].dealTags[j].name.toLowerCase().indexOf(searchWord) == -1) {
-  //         self.mapMarkers()[i].marker.setMap(null);
-  //       } else {
-  //         self.mapMarkers()[i].marker.setMap(map);
-  //         self.filter().push(array[i]);
-  //       }
-  //     }
-  //   }
-  // };
 
 // Use API to get deal data and store the info as objects in an array
   function getGroupons(location) {
@@ -182,6 +198,7 @@ function appViewModel() {
           });
 
         }
+        self.filteredList(self.grouponDeals());
         mapMarkers(self.grouponDeals());
         self.searchStatus('');
         self.loadImg('');
