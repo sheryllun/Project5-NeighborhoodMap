@@ -9,7 +9,8 @@ Features
 -------
 
 * Autocomplete deal location search
-* Search produces top thirty results near your requested area
+* Search produces top thirty results near your requested 
+* Filter deals by restaurant name or type
 * Integrated list view links to corresponding map marker on click
 * Mobile friendly view hides list and search bar until you need it
 * Re-center your map if you stray too far
