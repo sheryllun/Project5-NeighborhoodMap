@@ -4,9 +4,9 @@ function appViewModel() {
   var grouponLocations = [];
   var grouponReadableNames = [];
 
-  this.grouponDeals = ko.observableArray([]);
-  this.filteredList = ko.observableArray([]);
-  this.mapMarkers = ko.observableArray([]);
+  this.grouponDeals = ko.observableArray([]); //initial list of deals
+  this.filteredList = ko.observableArray([]); //list filtered by search keyword
+  this.mapMarkers = ko.observableArray([]);  //holds all map markers
   this.dealStatus = ko.observable('Searching for deals nearby...');
   this.searchStatus = ko.observable();
   this.searchLocation = ko.observable('Washington DC');
@@ -31,7 +31,7 @@ function appViewModel() {
         map.setZoom(14);
         infowindow.setContent(self.mapMarkers()[key].content);
         infowindow.open(map, self.mapMarkers()[key].marker);
-        map.panBy(0, -80);
+        map.panBy(0, -150);
         self.mobileShow(false);
         self.searchStatus('');
       }
@@ -74,7 +74,10 @@ function appViewModel() {
     }
   };
 
+
   this.filterKeyword = ko.observable('');
+
+  //Compare search keyword against names and dealTags of existing deals.  Return a filtered list and map markers of request.
 
   this.filterResults = function() {
     var searchWord = self.filterKeyword().toLowerCase();
@@ -243,7 +246,7 @@ function appViewModel() {
          map.setZoom(14);
          map.setCenter(marker.position);
          infowindow.open(map, marker);
-         map.panBy(0, -80);
+         map.panBy(0, -150);
        });
     });
   }
@@ -310,7 +313,7 @@ function appViewModel() {
     var currCenter = map.getCenter();
     var cityCenter = new google.maps.LatLng(self.currentLat(), self.currentLng());
     if((cityCenter.k == currCenter.k) && (cityCenter.D == currCenter.D)) {
-      return self.searchStatus('Map is already centered.');
+        self.searchStatus('Map is already centered.');
     } else {
       self.searchStatus('');
       map.panTo(cityCenter);
@@ -319,7 +322,6 @@ function appViewModel() {
   };
 
   mapInitialize();
-
 }
 
 //custom binding highlights the search text on focus

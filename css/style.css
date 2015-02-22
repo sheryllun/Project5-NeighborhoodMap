@@ -54,25 +54,21 @@ body {
   right: 45px;
 }
 
-.searchbar, .filterresults {
+.searchbar {
   position: absolute;
   top: 25px;
   left: 10px;
   background-color: rgba(255,255,255, 0.9);
   border: 1px solid gray;
-  padding: 15px 10px 5px 10px;
+  padding: 15px 10px;
 }
 
-.searchbar input, .filterresults input {
+.searchbar input {
   width: 175px;
   padding: 5px;
 }
 
-.filterresults {
-  top: 525px;
-}
-
-.filterresults #submit {
+.resultsform #submit {
   background: green;
 }
 
@@ -130,7 +126,7 @@ body {
   padding: 0;
   list-style-type: none;
   overflow: auto;
-  height: 450px;
+  max-height: 450px;
 }
 
 #results-list li {
@@ -201,6 +197,7 @@ body {
 
   .searchbar {
     top: 10px;
+    padding: 7px;
   }
 
   .results {
@@ -212,11 +209,12 @@ body {
   }
 
   .searchbar input {
-    width: 130px;
+    width: 108px;
+    font-size: 12px;
   }
 
   #submit {
-    width: 50px;
+    width: 45px;
   }
 
   .status-msg {
