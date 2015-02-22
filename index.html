@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
   <title>CheapSheet - Find Deals Around You!</title>
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -18,9 +18,19 @@
       <p data-bind="text: searchStatus"></p>
     </form>
   </div>
+
   <div title="re-center map" class="locbtn-large" data-bind="click: centerMap">
     <i class="fa fa-compass fa-2x"></i>
   </div>
+
+<!--   <div class="filterresults" data-bind="visible: searchBarShow() === true">
+    <form data-bind="submit: filterResults">
+      <input type="text" placeholder="Filter deals by type" data-bind="value:filterKeyword, selectOnFocus: true">
+      <input type="submit" value="Go!" id="submit">
+      <p data-bind="text: searchStatus"></p>
+    </form>
+  </div> -->
+
   <div class="results">
     <div>
       <h2 class="status-msg" data-bind="text: dealStatus"></h2>

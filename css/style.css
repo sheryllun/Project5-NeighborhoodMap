@@ -54,7 +54,7 @@ body {
   right: 45px;
 }
 
-.searchbar {
+.searchbar, .filterresults {
   position: absolute;
   top: 25px;
   left: 10px;
@@ -63,9 +63,17 @@ body {
   padding: 15px 10px 5px 10px;
 }
 
-.searchbar input {
+.searchbar input, .filterresults input {
   width: 175px;
   padding: 5px;
+}
+
+.filterresults {
+  top: 525px;
+}
+
+.filterresults #submit {
+  background: green;
 }
 
 #submit {
@@ -177,7 +185,7 @@ body {
   top: 130px;
   right: 10px;
   background-color: rgba(250,250,250, .9);
-  max-width: 350px;
+  max-width: 490px;
 }
 
 @media only screen and (max-width: 775px) {
@@ -191,6 +199,10 @@ body {
 
   .results {
     display: none;
+  }
+
+  #results-list {
+    max-height: 400px;
   }
 
   .searchbar input {

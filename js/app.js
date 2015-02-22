@@ -5,6 +5,7 @@ function appViewModel() {
   var grouponReadableNames = [];
 
   this.grouponDeals = ko.observableArray([]);
+  // this.filterKeyword = ko.observable('`');
   this.mapMarkers = ko.observableArray([]);
   this.dealStatus = ko.observable('Searching for deals nearby...');
   this.searchStatus = ko.observable();
@@ -30,6 +31,7 @@ function appViewModel() {
         map.setZoom(14);
         infowindow.setContent(self.mapMarkers()[key].content);
         infowindow.open(map, self.mapMarkers()[key].marker);
+        map.panBy(0, -80);
         self.mobileShow(false);
         self.searchStatus('');
       }
@@ -53,7 +55,6 @@ function appViewModel() {
         self.currentLng(grouponLocations.divisions[i].lng);
       }
     }
-
     //Form validation - if user enters an invalid location, return error.
     if(!newGrouponId) {
       return self.searchStatus('Not a valid location, try again.');
@@ -80,6 +81,10 @@ function appViewModel() {
     }
   };
 
+  this.mapRequestTimeout = setTimeout(function() {
+    $('#map-canvas').html('We had trouble loading Google Maps. Please refresh your browser and try again.');
+  }, 8000);
+
 // Initialize Google map, perform initial deal search on a city.
   function mapInitialize() {
     city = new google.maps.LatLng(38.906830, -77.038599);
@@ -96,6 +101,7 @@ function appViewModel() {
           mapTypeControl: false,
           panControl: false
         });
+    clearTimeout(self.mapRequestTimeout);
 
     google.maps.event.addDomListener(window, "resize", function() {
        var center = map.getCenter();
@@ -108,6 +114,23 @@ function appViewModel() {
     getGrouponLocations();
   }
 
+  // this.filter = ko.observableArray(self.grouponDeals());
+
+  // this.filterResults = function() {
+  //   var searchWord = self.filterKeyword().toLowerCase();
+  //   var array = self.grouponDeals();
+  //   for(var i=0; i < array.length; i++) {
+  //     for(var j = 0; j < array[i].dealTags.length; j++) {
+  //       if(array[i].dealTags[j].name.toLowerCase().indexOf(searchWord) == -1) {
+  //         self.mapMarkers()[i].marker.setMap(null);
+  //       } else {
+  //         self.mapMarkers()[i].marker.setMap(map);
+  //         self.filter().push(array[i]);
+  //       }
+  //     }
+  //   }
+  // };
+
 // Use API to get deal data and store the info as objects in an array
   function getGroupons(location) {
     var grouponUrl = "https://partner-api.groupon.com/deals.json?tsToken=US_AFF_0_203644_212556_0&filters=category:food-and-drink&limit=30&offset=0&division_id=";
@@ -118,7 +141,6 @@ function appViewModel() {
       url: grouponUrl + divId,
       dataType: 'jsonp',
       success: function(data) {
-        console.log(data);
         var len = data.deals.length;
         for(var i = 0; i < len; i++) {
           var venueLocation = data.deals[i].options[0].redemptionLocations[0];
@@ -133,7 +155,8 @@ function appViewModel() {
               city = venueLocation.city,
               state = venueLocation.state,
               zip = venueLocation.postalCode,
-              shortBlurb = data.deals[i].announcementTitle;
+              shortBlurb = data.deals[i].announcementTitle,
+              tags = data.deals[i].tags;
 
           // Some venues have a Yelp rating included. If there is no rating, function will stop executing because the variable is undefined. This if statement handles that error.
           var rating;
@@ -154,8 +177,10 @@ function appViewModel() {
             dealBlurb: blurb,
             dealAddress: address + "<br>" + city + ", " + state + " " + zip,
             dealShortBlurb: shortBlurb,
-            dealRating: rating
+            dealRating: rating,
+            dealTags: tags
           });
+
         }
         mapMarkers(self.grouponDeals());
         self.searchStatus('');
@@ -183,6 +208,7 @@ function appViewModel() {
       '<p class="rating">' + array[index].dealRating + '</p>' +
       '<p><a href="' + array[index].dealLink + '" target="_blank">Click to view deal</a></p>' +
       '<p>' + array[index].dealBlurb + '</p></div>';
+
       var marker = new google.maps.Marker({
         position: geoLoc,
         title: thisRestaurant,
@@ -200,6 +226,7 @@ function appViewModel() {
          map.setZoom(14);
          map.setCenter(marker.position);
          infowindow.open(map, marker);
+         map.panBy(0, -80);
        });
     });
   }
