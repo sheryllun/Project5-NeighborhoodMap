@@ -163,6 +163,8 @@ function appViewModel() {
         var len = data.deals.length;
         for(var i = 0; i < len; i++) {
           var venueLocation = data.deals[i].options[0].redemptionLocations[0];
+
+            //this line filters out deals that don't have a physical location to redeem
             if (data.deals[i].options[0].redemptionLocations[0] === undefined) continue;
           var venueName = data.deals[i].merchant.name;
               venueLat = venueLocation.lat,
