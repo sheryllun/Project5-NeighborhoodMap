@@ -10,7 +10,7 @@ Features
 
 * Autocomplete deal location search
 * Search produces top thirty results near your requested 
-* Filter deals by restaurant name or type
+* Filter deals by restaurant name or type (Please note, filtering by type is not extremely reliable as it uses the "deal tags" provided in the Groupon API response that aren't very descriptive.  Try searching for tags such as "restaurants" and "pizza" for best results. Filtering by name should work great.)
 * Integrated list view links to corresponding map marker on click
 * Mobile friendly view hides list and search bar until you need it
 * Re-center your map if you stray too far
