@@ -87,12 +87,20 @@ function appViewModel() {
     } else {
       self.filteredList([]);
       for(var i=0; i < array.length; i++) {
-        for(var j = 0; j < array[i].dealTags.length; j++) {
-          if((array[i].dealTags[j].name.toLowerCase().indexOf(searchWord) != -1 || array[i].dealName.toLowerCase().indexOf(searchWord) != -1)) {
-            self.mapMarkers()[i].marker.setMap(map);
-            self.filteredList.push(array[i]);
-          } else {
-            self.mapMarkers()[i].marker.setMap(null);
+        if(array[i].dealName.toLowerCase().indexOf(searchWord) != -1) {
+          self.mapMarkers()[i].marker.setMap(map);
+          self.filteredList.push(array[i]);
+        }
+        else{
+          self.mapMarkers()[i].marker.setMap(null);
+          for(var j = 0; j < array[i].dealTags.length; j++) {
+            if(array[i].dealTags[j].name.toLowerCase().indexOf(searchWord) != -1) {
+              self.mapMarkers()[i].marker.setMap(map);
+              self.filteredList.push(array[i]);
+              
+            } else {
+              self.mapMarkers()[i].marker.setMap(null);
+            }
           }
         }
       }
@@ -160,6 +168,7 @@ function appViewModel() {
       url: grouponUrl + divId,
       dataType: 'jsonp',
       success: function(data) {
+        console.log(data);
         var len = data.deals.length;
         for(var i = 0; i < len; i++) {
           var venueLocation = data.deals[i].options[0].redemptionLocations[0];
