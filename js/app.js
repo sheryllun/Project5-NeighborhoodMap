@@ -39,7 +39,7 @@ function appViewModel() {
   };
 
   // Handle the input given when user searches for deals in a location
-  this.processSearch = function() {
+  this.processLocationSearch = function() {
     //Need to use a jQuery selector instead of KO binding because this field is affected by the autocomplete plugin.  The value inputted does not seem to register via KO.
     self.searchStatus('');
     self.searchStatus('Searching...');
@@ -85,19 +85,25 @@ function appViewModel() {
     if(!searchWord) {
       return;
     } else {
+      //first clear out all entries in the filteredList array
       self.filteredList([]);
+      //Loop through the grouponDeals array and see if the search keyword matches 
+      //with any venue names in the list, if so push that object to the filteredList array and place the marker on the map.
       for(var i=0; i < array.length; i++) {
         if(array[i].dealName.toLowerCase().indexOf(searchWord) != -1) {
           self.mapMarkers()[i].marker.setMap(map);
           self.filteredList.push(array[i]);
         }
+      //Loop through the grouponDeals array and see if the search keyword matches 
+      //with any dealTags in the list, if so push that object to the filteredList 
+      //array and place the marker on the map.
         else{
           self.mapMarkers()[i].marker.setMap(null);
           for(var j = 0; j < array[i].dealTags.length; j++) {
             if(array[i].dealTags[j].name.toLowerCase().indexOf(searchWord) != -1) {
               self.mapMarkers()[i].marker.setMap(map);
               self.filteredList.push(array[i]);
-              
+          //otherwise hide all other markers from the map
             } else {
               self.mapMarkers()[i].marker.setMap(null);
             }
@@ -108,6 +114,7 @@ function appViewModel() {
     }
   };
 
+  //Clear keyword from filter and show all deals in current location again.
   this.clearFilter = function() {
     self.filteredList(self.grouponDeals());
     self.dealStatus(self.numDeals() + ' food and drink deals found near ' + self.searchLocation());
@@ -117,6 +124,7 @@ function appViewModel() {
     }
   };
 
+  //toggles the list view
   this.listToggle = function() {
     if(self.toggleSymbol() === 'hide') {
       self.toggleSymbol('show');
@@ -125,6 +133,7 @@ function appViewModel() {
     }
   };
 
+  //Error handling if Google Maps fails to load
   this.mapRequestTimeout = setTimeout(function() {
     $('#map-canvas').html('We had trouble loading Google Maps. Please refresh your browser and try again.');
   }, 8000);
@@ -161,7 +170,6 @@ function appViewModel() {
 // Use API to get deal data and store the info as objects in an array
   function getGroupons(location) {
     var grouponUrl = "https://partner-api.groupon.com/deals.json?tsToken=US_AFF_0_203644_212556_0&filters=category:food-and-drink&limit=30&offset=0&division_id=";
-
     var divId = location;
 
     $.ajax({
@@ -188,7 +196,9 @@ function appViewModel() {
               shortBlurb = data.deals[i].announcementTitle,
               tags = data.deals[i].tags;
 
-          // Some venues have a Yelp rating included. If there is no rating, function will stop executing because the variable is undefined. This if statement handles that error.
+          // Some venues have a Yelp rating included. If there is no rating, 
+          //function will stop running because the variable is undefined. 
+          //This if statement handles that scenario by setting rating to an empty string.
           var rating;
 
           if(data.deals[i].merchant.ratings[0] === undefined) { rating = '';
@@ -227,18 +237,18 @@ function appViewModel() {
 // Create and place markers and info windows on the map based on data from API
   function mapMarkers(array) {
     $.each(array, function(index, value) {
-      var latitude = array[index].dealLat;
-      var longitude = array[index].dealLon;
-      var geoLoc = new google.maps.LatLng(latitude, longitude);
-      var thisRestaurant = array[index].dealName;
+      var latitude = value.dealLat,
+          longitude = value.dealLon,
+          geoLoc = new google.maps.LatLng(latitude, longitude),
+          thisRestaurant = value.dealName;
 
       var contentString = '<div id="infowindow">' +
-      '<img src="' + array[index].dealImg + '">' +
-      '<h2>' + array[index].dealName + '</h2>' +
-      '<p>' + array[index].dealAddress + '</p>' +
-      '<p class="rating">' + array[index].dealRating + '</p>' +
-      '<p><a href="' + array[index].dealLink + '" target="_blank">Click to view deal</a></p>' +
-      '<p>' + array[index].dealBlurb + '</p></div>';
+      '<img src="' + value.dealImg + '">' +
+      '<h2>' + value.dealName + '</h2>' +
+      '<p>' + value.dealAddress + '</p>' +
+      '<p class="rating">' + value.dealRating + '</p>' +
+      '<p><a href="' + value.dealLink + '" target="_blank">Click to view deal</a></p>' +
+      '<p>' + value.dealBlurb + '</p></div>';
 
       var marker = new google.maps.Marker({
         position: geoLoc,
@@ -270,7 +280,10 @@ function appViewModel() {
     self.mapMarkers([]);
   }
 
-// Groupon's deal locations have a separate ID than the human-readable name (eg washington-dc instead of Washington DC). This ajax call uses the Groupon Division API to pull a list of IDs and their corresponding names to use for validation in the search bar.
+// Groupon's deal locations have a separate ID than the human-readable name 
+//(eg washington-dc instead of Washington DC). This ajax call uses the Groupon 
+//Division API to pull a list of IDs and their corresponding names to use for 
+//validation in the search bar.
 
   function getGrouponLocations() {
     $.ajax({

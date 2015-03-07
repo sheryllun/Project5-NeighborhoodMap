@@ -12,7 +12,7 @@
   <div id="map-canvas"></div>
 
   <div class="searchbar" data-bind="visible: searchBarShow() === true">
-    <form data-bind="submit: processSearch">
+    <form data-bind="submit: processLocationSearch">
       <input type="text" placeholder="Find deals in your area" data-bind="value: searchLocation, selectOnFocus: true" id="autocomplete">
       <input type="submit" value="Go!" id="submit">
       <p data-bind="text: searchStatus"></p>
