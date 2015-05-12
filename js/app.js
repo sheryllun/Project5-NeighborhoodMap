@@ -88,29 +88,25 @@ function appViewModel() {
       //first clear out all entries in the filteredList array
       self.filteredList([]);
       //Loop through the grouponDeals array and see if the search keyword matches 
-      //with any venue names in the list, if so push that object to the filteredList array and place the marker on the map.
+      //with any venue name or dealTags in the list, if so push that object to the filteredList 
+      //array and place the marker on the map.
       for(var i=0; i < array.length; i++) {
         if(array[i].dealName.toLowerCase().indexOf(searchWord) != -1) {
           self.mapMarkers()[i].marker.setMap(map);
           self.filteredList.push(array[i]);
-        }
-      //Loop through the grouponDeals array and see if the search keyword matches 
-      //with any dealTags in the list, if so push that object to the filteredList 
-      //array and place the marker on the map.
-        else{
-          self.mapMarkers()[i].marker.setMap(null);
+        } else{
           for(var j = 0; j < array[i].dealTags.length; j++) {
             if(array[i].dealTags[j].name.toLowerCase().indexOf(searchWord) != -1) {
               self.mapMarkers()[i].marker.setMap(map);
               self.filteredList.push(array[i]);
           //otherwise hide all other markers from the map
-            } else {
+          } else {
               self.mapMarkers()[i].marker.setMap(null);
             }
           }
+          self.dealStatus(self.numDeals() + ' deals found for ' + self.filterKeyword());
         }
       }
-      self.dealStatus(self.numDeals() + ' deals found for ' + self.filterKeyword());
     }
   };
 
@@ -200,8 +196,7 @@ function appViewModel() {
           //function will stop running because the variable is undefined. 
           //This if statement handles that scenario by setting rating to an empty string.
           var rating;
-
-          if(data.deals[i].merchant.ratings[0] === undefined) { rating = '';
+          if((data.deals[i].merchant.ratings == null) || data.deals[i].merchant.ratings[0] === undefined ) { rating = '';
           } else {
             var num = data.deals[i].merchant.ratings[0].rating;
             var decimal = num.toFixed(1);
@@ -228,7 +223,7 @@ function appViewModel() {
         self.loadImg('');
       },
       error: function() {
-        self.dealStatus('Oops, something went wrong, please try again.');
+        self.dealStatus('Oops, something went wrong, please refresh and try again.');
         self.loadImg('');
       }
     });
@@ -336,7 +331,7 @@ function appViewModel() {
     infowindow.close();
     var currCenter = map.getCenter();
     var cityCenter = new google.maps.LatLng(self.currentLat(), self.currentLng());
-    if((cityCenter.k == currCenter.k) && (cityCenter.D == currCenter.D)) {
+    if((cityCenter.k == currCenter.A) && (cityCenter.D == currCenter.F)) {
         self.searchStatus('Map is already centered.');
     } else {
       self.searchStatus('');
