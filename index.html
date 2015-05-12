@@ -64,7 +64,7 @@
     <div>
       <h2 class="status-msg" data-bind="text: dealStatus"></h2>
     </div>
-    <div>
+    <div class="mobile-results">
       <p class="waiting" data-bind="html: loadImg"></p>
       <ul id="results-list" data-bind="visible: toggleSymbol() === 'hide', foreach: filteredList">
         <li data-bind="click: $parent.goToMarker">

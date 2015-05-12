@@ -184,7 +184,7 @@ body {
 
 .mobileresults {
   position: fixed;
-  top: 130px;
+  bottom: 0px;
   right: 10px;
   background-color: rgba(250,250,250, .9);
   max-width: 490px;
