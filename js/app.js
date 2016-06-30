@@ -172,13 +172,14 @@ function appViewModel() {
       url: grouponUrl + divId,
       dataType: 'jsonp',
       success: function(data) {
-        console.log(data);
+        //console.log(data);
         var len = data.deals.length;
         for(var i = 0; i < len; i++) {
           var venueLocation = data.deals[i].options[0].redemptionLocations[0];
 
             //this line filters out deals that don't have a physical location to redeem
             if (data.deals[i].options[0].redemptionLocations[0] === undefined) continue;
+
           var venueName = data.deals[i].merchant.name;
               venueLat = venueLocation.lat,
               venueLon = venueLocation.lng,
@@ -331,7 +332,7 @@ function appViewModel() {
     infowindow.close();
     var currCenter = map.getCenter();
     var cityCenter = new google.maps.LatLng(self.currentLat(), self.currentLng());
-    if((cityCenter.k == currCenter.A) && (cityCenter.D == currCenter.F)) {
+    if(cityCenter === currCenter) {
         self.searchStatus('Map is already centered.');
     } else {
       self.searchStatus('');
